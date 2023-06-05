@@ -1,0 +1,11 @@
+.App {
+  text-align: center;
+}
+
+.ColorSection {
+  height: 50vh;
+  width: 100vw;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
