@@ -4,7 +4,7 @@
  * created on Sun Jun 04 2023
  * 2023 the nobot space
  */
-"use client";
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import { PropsWithChildren, createContext, useRef } from 'react';
