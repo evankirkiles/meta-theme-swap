@@ -23,13 +23,13 @@ export default function useMetaTheme(ref: RefObject<Element>, color: string) {
     if (!node) return;
     node.setAttribute('data-metathemeswap-color', color);
   }, [color, ref]);
-  
+
   useEffect(() => {
     const node = ref.current;
     if (!node || !observerTop) return;
     observerTop?.observe(node);
   }, [observerTop, ref]);
-  
+
   useEffect(() => {
     const node = ref.current;
     if (!node || !observerBottom) return;
