@@ -4,26 +4,29 @@
  * created on Sun Jun 04 2023
  * 2023 meta-theme-swap
  */
-import { RefObject, useContext, useEffect, useId } from 'react';
+import { RefObject, useContext, useEffect } from 'react';
 import { MetaThemeContext } from './MetaThemeContext';
 
-export default function useMetaTheme(
-  ref: RefObject<Element>,
-  color: string,
-  priority: number,
-  timeout?: string,
-) {
-  const id = useId();
-  const { observer } = useContext(MetaThemeContext);
+/**
+ * A hook for adding a meta theme color to an HTML element. When the element
+ * reaches the top of the screen, the navigation bar will change color to
+ * match the color specified. When the element reaches the bottom of the screen,
+ * the address bar changes color to match the color specified.
+ *
+ * @param ref A ref object for the element to check intersections
+ * @param color The color represented by the element.
+ */
+export default function useMetaTheme(ref: RefObject<Element>, color: string) {
+  const { observerTop, observerBottom } = useContext(MetaThemeContext);
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-    node.setAttribute('data-metathemeswap-id', id);
     node.setAttribute('data-metathemeswap-color', color);
-    node.setAttribute('data-metathemeswap-timeout', timeout ?? '0ms');
-    observer.observe(node);
+    observerTop.observe(node);
+    observerBottom.observe(node);
     return () => {
-      observer.unobserve(node);
+      observerTop.unobserve(node);
+      observerBottom.unobserve(node);
     };
-  }, [id, observer, color, timeout, ref]);
+  }, [observerTop, observerBottom, color, ref]);
 }
