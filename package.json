@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hebertcisco/ts-npm-package-boilerplate.git"
+    "url": "git+https://github.com/evankirkiles/meta-theme-swap.git"
   },
   "keywords": [
     "boilerplate",
@@ -27,9 +27,9 @@
   "author": "Evan Kirkiles",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hebertcisco/ts-npm-package-boilerplate/issues"
+    "url": "https://github.com/evankirkiles/meta-theme-swap/issues"
   },
-  "homepage": "https://github.com/hebertcisco/ts-npm-package-boilerplate#readme",
+  "homepage": "https://github.com/evankirkiles/meta-theme-swap#readme",
   "devDependencies": {
     "@testing-library/react": "^14.0.0",
     "@types/jest": "29.4.0",

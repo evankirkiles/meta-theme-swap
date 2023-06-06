@@ -10,7 +10,7 @@ import { useMetaTheme } from 'meta-theme-swap';
 
 function ColoredSection({ color }: { color: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  useMetaTheme(ref, color, 1, "300ms");
+  useMetaTheme(ref, color);
   return (
     <div id={color} className="ColorSection" style={{ backgroundColor: color }} ref={ref}>
       {color}
@@ -21,10 +21,26 @@ function ColoredSection({ color }: { color: string }) {
 function App() {
   return (
     <div className="App">
+      <ColoredSection color="#00ff00" />
+      <ColoredSection color="#0000ff" />
+      <ColoredSection color="#000000" />
+      <ColoredSection color="#ffff00" />
+      <ColoredSection color="#00ffff" />
+      <ColoredSection color="#ff00ff" />
       <ColoredSection color="#ff0000" />
       <ColoredSection color="#00ff00" />
       <ColoredSection color="#0000ff" />
       <ColoredSection color="#000000" />
+      <ColoredSection color="#ffff00" />
+      <ColoredSection color="#00ffff" />
+      <ColoredSection color="#ff00ff" />
+      <ColoredSection color="#ff0000" />
+      <ColoredSection color="#00ff00" />
+      <ColoredSection color="#0000ff" />
+      <ColoredSection color="#000000" />
+      <ColoredSection color="#ffff00" />
+      <ColoredSection color="#00ffff" />
+      <ColoredSection color="#ff00ff" />
     </div>
   );
 }
