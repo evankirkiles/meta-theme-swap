@@ -22,11 +22,17 @@ export default function useMetaTheme(ref: RefObject<Element>, color: string) {
     const node = ref.current;
     if (!node) return;
     node.setAttribute('data-metathemeswap-color', color);
-    observerTop.observe(node);
-    observerBottom.observe(node);
-    return () => {
-      observerTop.unobserve(node);
-      observerBottom.unobserve(node);
-    };
-  }, [observerTop, observerBottom, color, ref]);
+  }, [color, ref]);
+  
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || !observerTop) return;
+    observerTop?.observe(node);
+  }, [observerTop, ref]);
+  
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || !observerBottom) return;
+    observerBottom?.observe(node);
+  }, [observerBottom, ref]);
 }

@@ -4,17 +4,17 @@
  * created on Sun Jun 04 2023
  * 2023 the nobot space
  */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { PropsWithChildren, createContext, useRef } from 'react';
 
 interface IMetaThemeContext {
-  observerTop: IntersectionObserver;
-  observerBottom: IntersectionObserver;
+  observerTop: IntersectionObserver | null;
+  observerBottom: IntersectionObserver | null;
 }
 
 export const MetaThemeContext = createContext<IMetaThemeContext>({
-  observerTop: new IntersectionObserver(() => void 0),
-  observerBottom: new IntersectionObserver(() => void 0),
+  observerTop: null,
+  observerBottom: null,
 });
 
 /**
@@ -30,45 +30,51 @@ export const MetaThemeContext = createContext<IMetaThemeContext>({
 export default function MetaThemeProvider({ children }: PropsWithChildren) {
   const metaTag = useRef<HTMLMetaElement>(document.querySelector('meta[name="theme-color"'));
   const currThemeColor = useRef<string | null>(metaTag.current?.getAttribute('content') ?? null);
+  const [observerTop, setTop] = useState<IntersectionObserver | null>(null);
+  const [observerBottom, setBot] = useState<IntersectionObserver | null>(null);
+
+  useEffect(() => {
+    setTop(
+      new IntersectionObserver(
+        (es) => {
+          if (!metaTag.current) return;
+          const selectedEntry = es.filter((e) => e.isIntersecting);
+          const target = selectedEntry[0]?.target;
+          if (!target) return;
+          const color = target.getAttribute('data-metathemeswap-color');
+          if (!color) return;
+          currThemeColor.current = color;
+          metaTag.current.setAttribute('content', currThemeColor.current);
+        },
+        {
+          rootMargin: '-0.05% 0px -99.9% 0px',
+        },
+      ),
+    );
+    setBot(
+      new IntersectionObserver(
+        (es) => {
+          if (!metaTag.current) return;
+          const selectedEntry = es.filter((e) => e.isIntersecting);
+          const target = selectedEntry[0]?.target;
+          if (!target) return;
+          const color = target.getAttribute('data-metathemeswap-color');
+          if (!color) return;
+          currThemeColor.current = color;
+          metaTag.current.setAttribute('content', currThemeColor.current);
+        },
+        {
+          rootMargin: '-0.05% 0px -99.9% 0px',
+        },
+      ),
+    );
+  }, []);
+
   return (
     <MetaThemeContext.Provider
       value={{
-        // Top of screen intersection observer (controls theme-color)
-        observerTop: new IntersectionObserver(
-          (es) => {
-            if (!metaTag.current) return;
-            const selectedEntry = es.filter((e) => e.isIntersecting);
-            const target = selectedEntry[0]?.target;
-            if (!target) return;
-            const color = target.getAttribute('data-metathemeswap-color');
-            if (!color) return;
-            currThemeColor.current = color;
-            metaTag.current.setAttribute('content', currThemeColor.current);
-          },
-          {
-            rootMargin: '-0.05% 0px -99.9% 0px',
-          },
-        ),
-        // Bottom of screen intersection observer (controls background-color)
-        observerBottom: new IntersectionObserver(
-          (es) => {
-            if (!metaTag.current) return;
-            const selectedEntry = es.filter((e) => e.isIntersecting);
-            const target = selectedEntry[0]?.target;
-            if (!target) return;
-            const color = target.getAttribute('data-metathemeswap-color');
-            if (!color) return;
-            document.body.style.backgroundColor = color;
-            metaTag.current.setAttribute('content', currThemeColor.current + 'fe');
-            const meta = metaTag.current;
-            requestAnimationFrame(() => {
-              meta.setAttribute('content', currThemeColor.current || '');
-            });
-          },
-          {
-            rootMargin: '-99.9% 0px -0.05% 0px',
-          },
-        ),
+        observerTop,
+        observerBottom,
       }}
     >
       {children}
