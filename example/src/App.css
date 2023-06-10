@@ -9,3 +9,21 @@
   justify-content: center;
   align-items: center;
 }
+
+.MenuButton {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  padding: 1em;
+  z-index: 3;
+}
+
+.Menu {
+  position: fixed;
+  top: -1px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh + 1px);
+  background-color: #ffffff;
+  z-index: 2;
+}

@@ -1,6 +1,6 @@
 {
   "name": "meta-theme-swap",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Synchronizes WebKit meta theme color with elements on the page.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -10,6 +10,8 @@
     "lint": "eslint src --ext .js,.ts,.tsx",
     "lint:fix": "eslint src --fix --ext .js,.ts",
     "test": "jest --config jest.config.js",
+    "demo": "cd example; yarn start",
+    "dev": "tsc -w",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
