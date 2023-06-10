@@ -41,6 +41,8 @@ export default function MetaThemeProvider({ children }: PropsWithChildren) {
   const metaTag = useRef<HTMLMetaElement | null>(null);
   const currThemeColor = useRef<string | null>(null);
   const observedElements = useRef(new Set<Element>());
+  const topPrio = useRef(-Infinity);
+  const botPrio = useRef(-Infinity);
   const [observerTop, setTop] = useState<IntersectionObserver | null>(null);
   const [observerBottom, setBot] = useState<IntersectionObserver | null>(null);
 
@@ -57,12 +59,13 @@ export default function MetaThemeProvider({ children }: PropsWithChildren) {
         .reduce<[Element | null, number]>(
           (acc, entry) => {
             const priority = parseInt(entry.target.getAttribute('data-mts-priority') ?? '-1');
-            return priority > acc[1] ? [entry.target, priority] : acc;
+            return priority >= acc[1] ? [entry.target, priority] : acc;
           },
-          [null, -Infinity],
+          [null, topPrio.current],
         );
       const target = selectedEntry[0];
       if (!target) return;
+      topPrio.current = selectedEntry[1];
       const color = target.getAttribute('data-mts-color');
       if (!color) return;
       currThemeColor.current = color;
@@ -77,12 +80,13 @@ export default function MetaThemeProvider({ children }: PropsWithChildren) {
         .reduce<[Element | null, number]>(
           (acc, entry) => {
             const priority = parseInt(entry.target.getAttribute('data-mts-priority') ?? '-1');
-            return priority > acc[1] ? [entry.target, priority] : acc;
+            return priority >= acc[1] ? [entry.target, priority] : acc;
           },
-          [null, -Infinity],
+          [null, botPrio.current],
         );
       const target = selectedEntry[0];
       if (!target) return;
+      botPrio.current = selectedEntry[1];
       const color = target.getAttribute('data-mts-color');
       if (!color) return;
       document.body.style.backgroundColor = color;
@@ -93,6 +97,7 @@ export default function MetaThemeProvider({ children }: PropsWithChildren) {
       });
     }
 
+    // attach the intersection observers
     setTop(new IntersectionObserver(updateTop, IO_TOP_OPTIONS));
     setBot(new IntersectionObserver(updateBot, IO_BOT_OPTIONS));
   }, []);
@@ -104,6 +109,8 @@ export default function MetaThemeProvider({ children }: PropsWithChildren) {
       if (observedElements.current.has(elToAdd)) return;
       observedElements.current.add(elToAdd);
       // re-observe all of the elements
+      topPrio.current = -Infinity;
+      botPrio.current = -Infinity;
       observedElements.current.forEach((el) => {
         observerTop.unobserve(el);
         observerTop.observe(el);
@@ -121,6 +128,8 @@ export default function MetaThemeProvider({ children }: PropsWithChildren) {
       if (!observedElements.current.has(elToDelete)) return;
       observedElements.current.delete(elToDelete);
       // re-observe all of the elements
+      topPrio.current = -Infinity;
+      botPrio.current = -Infinity;
       observedElements.current.forEach((el) => {
         observerTop.unobserve(el);
         observerTop.observe(el);
